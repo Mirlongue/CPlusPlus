@@ -42,7 +42,7 @@ mark connection:	  ##
 ./Factory_Demo
 ```
 
-## stdexec demo
+## [stdexec](https://github.com/NVIDIA/stdexec) demo
 
 ```
 ./Stdexec_Demo
