@@ -8,5 +8,6 @@ int main() {
   cas_3();
   cas_4();
   cas_5();
+  cas_6();
   return 0;
 }
