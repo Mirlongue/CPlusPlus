@@ -11,5 +11,6 @@ int main() {
   cas_6();
   cas_7();
   cas_8();
+  cas_9();
   return 0;
 }
