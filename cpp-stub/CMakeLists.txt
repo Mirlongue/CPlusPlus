@@ -11,6 +11,7 @@ add_executable(demo
     sub/cas_04.cpp
     sub/cas_05.cpp
     sub/cas_06.cpp
+    sub/cas_07.cpp
     )
 
 target_compile_options(demo PRIVATE -fno-inline -fno-access-control)
