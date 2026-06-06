@@ -12,5 +12,6 @@ int main() {
   cas_7();
   cas_8();
   cas_9();
+  cas_10();
   return 0;
 }
