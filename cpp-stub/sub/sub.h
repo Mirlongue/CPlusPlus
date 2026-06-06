@@ -19,6 +19,7 @@ namespace sub {
     int cas_11();
     int cas_12();
     int cas_13();
+    int cas_14();
 }
 
 #endif // SUB_H
