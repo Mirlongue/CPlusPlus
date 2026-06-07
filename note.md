@@ -32,3 +32,11 @@ inherited constructor (using BaseClass::BaseClass)
 stringification:		#
 
 mark connection:	  ##
+
+## target_compile_options
+
+```shell
+-fno-inline # inline access prohibited
+-fno-access-control # disable C++ access control checks
+```
+
