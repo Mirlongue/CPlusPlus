@@ -31,10 +31,25 @@ struct DumpOS{
     }
 };
 
+
+void dump_buff(char * p, int size, std::string name) {
+    std::string prefix = "D:/Reposity_github/CPlusPlus/trick/dump/build/";
+    std::string path = prefix + name + ".bin";
+    std::ofstream ofs(path, std::ios::binary);
+    if (ofs) {
+        std::copy(p, p + size, std::ostream_iterator<char>{ofs});
+    }
+    ofs.close();
+
+}
+
 int main() {
     DumpOS oss;
     oss << "hellow" >> "world";
     oss.dump("test");
+
+    char st[11] = "0123456789";
+    dump_buff(st, 10, "st");
 
     return 0;
 }
