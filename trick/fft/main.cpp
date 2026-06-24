@@ -8,9 +8,6 @@ using namespace std;
 #define N 150010
 const double pi = 3.141592653;
 
-char s0[N>>1], s1[N>>1];
-string st0,st1;
-
 double reA[N], inA[N];
 double reB[N], inB[N];
 double reTmp[N], inTmp[N];
@@ -19,22 +16,20 @@ int ans[N>>1];
 
 int len, len0, len1;
 
-void pre_process(){
+void pre_process(char * s0, char * s1) {
+    string st0, st1;
 
-{
-    int i;
-    i = 0;
-    while(s0[i] == '0') i++;
-    st0 = string(s0 + i);
+    for(int i = 0; ; i++) if (s0[i] != '0') {
+        st0 = string(s0 + i);
+        break;
+    }
+    cout << "st0: " << st0 << endl;
 
-    cout << "st0:" << st0 << endl;
-    
-    i = 0;
-    while(s1[i] == '0') i++;
-    st1 = string(s1 + i);
-
-    cout << "st1:" << st1 << endl;
-}
+    for(int i = 0; ; i++) if (s1[i] != '0') {
+        st1 = string(s1 + i);
+        break;
+    }
+    cout << "st1: " << st1 << endl;       
 
     memset(ans, 0, sizeof(ans));
 
@@ -106,11 +101,21 @@ void FFT(double *reX, double *inX, int n, int flag) {
     
 }
 
-int main() {
+int rev(int x, int ser) {
+    int ans = 0;
+    for(int i = 0; i < ser; i++) {
+        ans <<= 1;
+        ans |= x & 1;
+        x >>= 1;
+    }
+    return ans;
+}
 
+int main() {
+    char s0[N>>1], s1[N>>1];
     while (~scanf("%s%s", s0, s1)) {
 
-        pre_process();
+        pre_process(s0, s1);
 
         FFT(reA, inA, len, 0);
         FFT(reB, inB, len, 0);
