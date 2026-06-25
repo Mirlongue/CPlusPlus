@@ -8,45 +8,38 @@ using namespace std;
 #define N 150010
 const double pi = 3.141592653;
 
-double reA[N], inA[N];
-double reB[N], inB[N];
-double reTmp[N], inTmp[N];
 
-int ans[N>>1];
-
-int len, len0, len1;
-
-void pre_process(char * s0, char * s1) {
+bool pre_process(double * & reA, double * & inA,
+                 double * & reB, double * & inB, int & len) {
     string st0, st1;
+    std::cin >> st0 >> st1;
 
-    for(int i = 0; ; i++) if (s0[i] != '0') {
-        st0 = string(s0 + i);
+    for(int i = 0; ; i++) if (st0[i] != '0') {
+        st0 = st0.substr(i);
         break;
     }
     cout << "st0: " << st0 << endl;
 
-    for(int i = 0; ; i++) if (s1[i] != '0') {
-        st1 = string(s1 + i);
+    for(int i = 0; ; i++) if (st1[i] != '0') {
+        st1 = st1.substr(i);
         break;
     }
     cout << "st1: " << st1 << endl;       
 
-    memset(ans, 0, sizeof(ans));
-
-    memset(reA, 0, sizeof(reA));
-    memset(inA, 0, sizeof(inA));
-
-    memset(reB, 0, sizeof(reB));
-    memset(inB, 0, sizeof(inB));
-
     len = 1;
-
     int lenTmp;
-    len0 = st0.length();
-    len1 = st1.length();
+    int len0 = st0.length();
+    int len1 = st1.length();
     lenTmp = (len0 > len1 ? len0 : len1);
     while(len < lenTmp) len <<= 1;
     len <<= 1;
+
+
+
+    reA = new double[len]{};
+    inA = new double[len]{};
+    reB = new double[len]{};
+    inB = new double[len]{};
 
     for(int i = 0; i < len; i++) {
         if(i < len0) reA[i] = (double)st0[len0 - i - 1] - '0';
@@ -58,10 +51,11 @@ void pre_process(char * s0, char * s1) {
     printf("\n");
     for(int i = 0 ; i < len; i++) printf("%.1f ",reB[i]);
 
-
+    return true;
 
 }
 
+double reTmp[N], inTmp[N];
 void FFT(double *reX, double *inX, int n, int flag) {
     if(n == 1) return;
 
@@ -112,40 +106,50 @@ int rev(int x, int ser) {
 }
 
 int main() {
-    char s0[N>>1], s1[N>>1];
-    while (~scanf("%s%s", s0, s1)) {
 
-        pre_process(s0, s1);
 
-        FFT(reA, inA, len, 0);
-        FFT(reB, inB, len, 0);
+    double * reA, * inA;
+    double * reB, * inB;
+    int len;
+    int * ans;
 
-        for(int i = 0; i < len; i++) {
-            double reC = reA[i] * reB[i] - inA[i] * inB[i];
-            double inC = reA[i] * inB[i] + inA[i] * reB[i];
-            reA[i] = reC;
-            inA[i] = inC;
-        }
-        FFT(reA, inA, len, 1);
-        for(int i = 0; i < len; i++) {
-            reA[i] /= len;
-            inA[i] /= len;
-        }
+    while (pre_process(reA, inA, reB, inB, len)) {
 
-        for(int i = 0; i < len; i++) ans[i] = (int)(reA[i] + 0.5);
-        for(int i = 0; i < len; i++) {
-            ans[i + 1] += ans[i] / 10;
-            ans[i] %= 10;
-        }
-        int len_ans = len0 + len1 + 2;
-        while(ans[len_ans] == 0 && len_ans > 0) len_ans--;
+        // FFT(reA, inA, len, 0);
+        // FFT(reB, inB, len, 0);
 
-        printf("\n");
-        for(int i = len_ans; i >= 0; i--)
-            printf("%d", ans[i]);
-        printf("\n");
-        
+        // for(int i = 0; i < len; i++) {
+        //     double reC = reA[i] * reB[i] - inA[i] * inB[i];
+        //     double inC = reA[i] * inB[i] + inA[i] * reB[i];
+        //     reA[i] = reC;
+        //     inA[i] = inC;
+        // }
+        // FFT(reA, inA, len, 1);
+        // for(int i = 0; i < len; i++) {
+        //     reA[i] /= len;
+        //     inA[i] /= len;
+        // }
 
+        // for(int i = 0; i < len; i++) ans[i] = (int)(reA[i] + 0.5);
+        // for(int i = 0; i < len; i++) {
+        //     ans[i + 1] += ans[i] / 10;
+        //     ans[i] %= 10;
+        // }
+        // int len_ans = len0 + len1 + 2;
+        // while(ans[len_ans] == 0 && len_ans > 0) len_ans--;
+
+        // printf("\n");
+        // for(int i = len_ans; i >= 0; i--)
+        //     printf("%d", ans[i]);
+        // printf("\n");
+    delete[] reA;
+    reA = nullptr;
+    delete[] inA;
+    inA = nullptr;
+    delete[] reB;
+    reB = nullptr;
+    delete[] inB;
+    inB = nullptr;
 
     }
 
