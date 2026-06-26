@@ -8,7 +8,6 @@ using namespace std;
 #define N 150010
 const double pi = 3.141592653;
 
-
 bool pre_process(double * & reA, double * & inA,
                  double * & reB, double * & inB, int & len) {
     string st0, st1;
@@ -34,8 +33,6 @@ bool pre_process(double * & reA, double * & inA,
     while(len < lenTmp) len <<= 1;
     len <<= 1;
 
-
-
     reA = new double[len]{};
     inA = new double[len]{};
     reB = new double[len]{};
@@ -52,17 +49,15 @@ bool pre_process(double * & reA, double * & inA,
     for(int i = 0 ; i < len; i++) printf("%.1f ",reB[i]);
 
     return true;
-
 }
 
-double reTmp[N], inTmp[N];
-void FFT(double *reX, double *inX, int n, int flag) {
+void fft(double * reX, double * inX, int n, int flag, double * reTmp, double * inTmp) {
     if(n == 1) return;
 
     double reWm = cos(2 * pi / n), inWm = sin(2 * pi / n);
     if(flag) inWm = -inWm;
     double reW = 1.0, inW = 0.0;
-    
+
     int k, u, i;
     for(k = 1, u = 0; k < n; k += 2, u++) {
         reTmp[u] = reX[k];
@@ -76,8 +71,8 @@ void FFT(double *reX, double *inX, int n, int flag) {
         reX[k] = reTmp[i];
         inX[k] = inTmp[i];
     }
-    FFT(reX, inX, n / 2, flag);
-    FFT(reX + n / 2, inX + n / 2, n / 2, flag);
+    fft(reX, inX, n / 2, flag, reTmp, inTmp);
+    fft(reX + n / 2, inX + n / 2, n / 2, flag, reTmp, inTmp);
     for(k = 0; k < n / 2; k++) {
         int tag = k + n / 2;
         double reT = reW * reX[tag] - inW * inX[tag];
@@ -92,7 +87,19 @@ void FFT(double *reX, double *inX, int n, int flag) {
         reW = rew_t;
         inW = inw_t;
     }
-    
+}
+
+void run_fft(double * reX, double * inX, int n, int flag) {
+    double * reTmp, * inTmp;
+    reTmp = new double[n]{};
+    inTmp = new double[n]{};
+
+    fft(reX, inX, n, flag, reTmp, inTmp);
+
+    delete[] reTmp;
+    reTmp = nullptr;
+    delete[] inTmp;
+    inTmp = nullptr;
 }
 
 int rev(int x, int ser) {
@@ -106,42 +113,42 @@ int rev(int x, int ser) {
 }
 
 int main() {
-
-
     double * reA, * inA;
     double * reB, * inB;
     int len;
     int * ans;
 
     while (pre_process(reA, inA, reB, inB, len)) {
+        ans = new int[len]{};
 
-        // FFT(reA, inA, len, 0);
-        // FFT(reB, inB, len, 0);
+        run_fft(reA, inA, len, 0);
+        run_fft(reB, inB, len, 0);
 
-        // for(int i = 0; i < len; i++) {
-        //     double reC = reA[i] * reB[i] - inA[i] * inB[i];
-        //     double inC = reA[i] * inB[i] + inA[i] * reB[i];
-        //     reA[i] = reC;
-        //     inA[i] = inC;
-        // }
-        // FFT(reA, inA, len, 1);
-        // for(int i = 0; i < len; i++) {
-        //     reA[i] /= len;
-        //     inA[i] /= len;
-        // }
+        for(int i = 0; i < len; i++) {
+            double reC = reA[i] * reB[i] - inA[i] * inB[i];
+            double inC = reA[i] * inB[i] + inA[i] * reB[i];
+            reA[i] = reC;
+            inA[i] = inC;
+        }
+        run_fft(reA, inA, len, 1);
+        for(int i = 0; i < len; i++) {
+            reA[i] /= len;
+            inA[i] /= len;
+        }
 
-        // for(int i = 0; i < len; i++) ans[i] = (int)(reA[i] + 0.5);
-        // for(int i = 0; i < len; i++) {
-        //     ans[i + 1] += ans[i] / 10;
-        //     ans[i] %= 10;
-        // }
-        // int len_ans = len0 + len1 + 2;
-        // while(ans[len_ans] == 0 && len_ans > 0) len_ans--;
+        for(int i = 0; i < len; i++) ans[i] = (int)(reA[i] + 0.5);
+        for(int i = 0; i < len; i++) {
+            ans[i + 1] += ans[i] / 10;
+            ans[i] %= 10;
+        }
+        int tag = len-1;
+        while(ans[tag] == 0 && tag > 0) tag--;
 
-        // printf("\n");
-        // for(int i = len_ans; i >= 0; i--)
-        //     printf("%d", ans[i]);
-        // printf("\n");
+        printf("\n");
+        for(int i = tag; i >= 0; i--)
+            printf("%d", ans[i]);
+        printf("\n");
+
     delete[] reA;
     reA = nullptr;
     delete[] inA;
@@ -150,7 +157,8 @@ int main() {
     reB = nullptr;
     delete[] inB;
     inB = nullptr;
-
+    delete[] ans;
+    ans = nullptr;
     }
 
     return 0;
