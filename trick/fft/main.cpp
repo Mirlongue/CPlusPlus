@@ -11,7 +11,7 @@ const double pi = 3.141592653;
 bool pre_process(double * & reA, double * & inA,
                  double * & reB, double * & inB, int & len) {
     string st0, st1;
-    std::cin >> st0 >> st1;
+    cin >> st0 >> st1;
 
     for(int i = 0; ; i++) if (st0[i] != '0') {
         st0 = st0.substr(i);
@@ -112,6 +112,45 @@ int rev(int x, int ser) {
     return ans;
 }
 
+void fft_(double * reA, double * inA, int n, int flag) {
+    double lgn = log((double)n) / log((double)2);
+    for(int i = 0; i < n; i++) {
+        int j = rev(i, lgn);
+        if (j > i) {
+            swap(reA[i], reA[j]);
+            swap(inA[i], inA[j]);
+        }
+    }
+    for(int s = 1; s <= lgn; s++) {
+        int m = 1 << s;
+        double reWm = cos(2 * pi / m), inWm = sin(2 * pi / m);
+        if (flag) inWm = -inWm;
+        for(int k = 0; k < n; k += n) {
+            double reW = 1.0, inW = 0.0;
+            for(int j = 0; j < m / 2; j++) {
+                int tag = k + j + m / 2;
+                double reT = reW * reA[tag] - inW * inA[tag];
+                double inT = reW * inA[tag] + inW * reA[tag];
+                double reU = reA[k + j], inU = inA[k + j];
+                reA[k+j] = reU + reT;
+                inA[k+j] = inU + inT;
+                reA[tag] = reU - reT;
+                inA[tag] = inU - inT;
+                double rew_t = reW * reWm - inW * inWm; 
+                double inw_t = reW * inWm + inW * reWm; 
+                reW = rew_t;
+                inW = inw_t;
+            }
+        }
+    }
+    if (flag) {
+        for (int i = 0; i < n; i++) {
+            reA[i] /= n;
+            inA[i] /= n;
+        }
+    }
+}
+
 int main() {
     double * reA, * inA;
     double * reB, * inB;
@@ -121,8 +160,10 @@ int main() {
     while (pre_process(reA, inA, reB, inB, len)) {
         ans = new int[len]{};
 
-        run_fft(reA, inA, len, 0);
-        run_fft(reB, inB, len, 0);
+        // run_fft(reA, inA, len, 0);
+        // run_fft(reB, inB, len, 0);
+        fft_(reA, inA, len, 0);
+        fft_(reB, inB, len, 0);
 
         for(int i = 0; i < len; i++) {
             double reC = reA[i] * reB[i] - inA[i] * inB[i];
@@ -130,7 +171,8 @@ int main() {
             reA[i] = reC;
             inA[i] = inC;
         }
-        run_fft(reA, inA, len, 1);
+        // run_fft(reA, inA, len, 1);
+        fft_(reA, inA, len, 1);
         for(int i = 0; i < len; i++) {
             reA[i] /= len;
             inA[i] /= len;
