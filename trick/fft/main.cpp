@@ -96,6 +96,13 @@ void run_fft(double * reX, double * inX, int n, int flag) {
 
     fft(reX, inX, n, flag, reTmp, inTmp);
 
+    if (flag) {
+        for (int i = 0; i < n; i++) {
+            reX[i] /= n;
+            inX[i] /= n;
+        }
+    }
+
     delete[] reTmp;
     reTmp = nullptr;
     delete[] inTmp;
@@ -125,7 +132,7 @@ void fft_(double * reA, double * inA, int n, int flag) {
         int m = 1 << s;
         double reWm = cos(2 * pi / m), inWm = sin(2 * pi / m);
         if (flag) inWm = -inWm;
-        for(int k = 0; k < n; k += n) {
+        for(int k = 0; k < n; k += m) {
             double reW = 1.0, inW = 0.0;
             for(int j = 0; j < m / 2; j++) {
                 int tag = k + j + m / 2;
@@ -173,10 +180,6 @@ int main() {
         }
         // run_fft(reA, inA, len, 1);
         fft_(reA, inA, len, 1);
-        for(int i = 0; i < len; i++) {
-            reA[i] /= len;
-            inA[i] /= len;
-        }
 
         for(int i = 0; i < len; i++) ans[i] = (int)(reA[i] + 0.5);
         for(int i = 0; i < len; i++) {
