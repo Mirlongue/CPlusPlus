@@ -27,6 +27,11 @@ template struct private_access<decltype(&A::x_), &A::x_,
 
 int A::* get(PrivateAccessTag__COUNTER__);
 
+
+#define PRIVATE_ACCESS_DETAIL_CONCATENATE_IMPL(x, y) x##y
+#define PRIVATE_ACCESS_DETAIL_CONCATENATE(x, y)                                \
+  PRIVATE_ACCESS_DETAIL_CONCATENATE_IMPL(x, y)
+
 int main() {
 
     A a;
@@ -36,6 +41,14 @@ int main() {
     int & A_x = a.*get(PrivateAccessTag__COUNTER__{});
     A_x = 5;
     cout << a.getX() << endl;
+
+    int PRIVATE_ACCESS_DETAIL_CONCATENATE(PrivateAccessTag, __COUNTER__) = 666;
+
+    cout <<  PrivateAccessTag0 << endl;
+
+    int PRIVATE_ACCESS_DETAIL_CONCATENATE(PrivateAccessTag, __COUNTER__) = 777;
+
+    cout <<  PrivateAccessTag1 << endl;
 
     return 0;
 }
