@@ -20,8 +20,6 @@ public:
     }
 };
 
-
-
 ACCESS_PRIVATE_FIELD(A, int, x_);
 // namespace {
 //     struct PrivateAccessTag6 {};
