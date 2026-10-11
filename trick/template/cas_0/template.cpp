@@ -10,7 +10,7 @@ void Swap(T &a, T &b) {
     std::cout << "template" << std::endl;
 }
 
-// explicit concretion
+// explicit specialization
 template <> void Swap<int>(int & a, int & b) {
     int c = a; a = b; b = c;
     std::cout << "int" << std::endl;

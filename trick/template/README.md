@@ -10,10 +10,10 @@ cmake --build .
 
 ### cas_0
 
-**template functions** do not generate functions while **explicit concretion** & **explicit instantiation**
+**template functions** do not generate functions while **explicit specialization** & **explicit instantiation**
 
 `trick\template\cas_0\cas_0.cpp:8` 
-set `int` explicit concretion
+set `int` explicit specialization
 set `double` explicit instantiation
 set `float`  failure case
 
