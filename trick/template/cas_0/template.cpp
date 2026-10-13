@@ -12,13 +12,22 @@ void Swap(T &a, T &b) {
 
 // explicit specialization
 template <> void Swap<int>(int & a, int & b) {
+// template <> void Swap(int & a, int & b) { // simplify
     int c = a; a = b; b = c;
     std::cout << "int" << std::endl;
-
 }
 
 // explicit instantiation
 template void Swap<double>(double &, double &);
+// template void Swap(double &, double &); // simplify
+
 // template void Swap<float>(float &, float &);
+
+template <class T>
+void Tset(stack<T> & x) {
+    cout << "set" << endl;
+}
+
+template void Tset(stack<int> &);
 
 }

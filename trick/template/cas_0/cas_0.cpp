@@ -15,6 +15,9 @@ void cas_0() {
     Swap(x,y);
     cout << x << " " << y << endl;
 
+    stack<int> z;
+    Tset(z);
+
 }
 
 }
