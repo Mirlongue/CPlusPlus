@@ -23,11 +23,14 @@ template void Swap<double>(double &, double &);
 
 // template void Swap<float>(float &, float &);
 
+
 template <class T>
 void Tset(stack<T> & x) {
     cout << "set" << endl;
 }
 
-template void Tset(stack<int> &);
+// explicit instantiation
+template void Tset<int>(stack<int> &);
+// template void Tset(stack<int> &); // simplify
 
 }
